@@ -1,84 +1,60 @@
 <template>
 	<v-app>
-		<v-navigation-drawer
-			persistent
-			:mini-variant="miniVariant"
-			:clipped="clipped"
-			v-model="drawer"
-			enable-resize-watcher
-			fixed
-			app
-		>
-			<v-list>
-				<v-list-tile
-					value="true"
-					v-for="(item, i) in items"
-					:key="i"
-				>
-					<v-list-tile-action>
-						<v-icon v-html="item.icon"></v-icon>
-					</v-list-tile-action>
-					<v-list-tile-content>
-						<v-list-tile-title v-text="item.title"></v-list-tile-title>
-					</v-list-tile-content>
-				</v-list-tile>
-			</v-list>
-		</v-navigation-drawer>
 		<v-toolbar
 			app
+			color='primary'
+			dark
+			class='pl-0'
+			fixed
 			:clipped-left="clipped"
 		>
-			<v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-			<v-btn icon @click.stop="miniVariant = !miniVariant">
-				<v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
-			</v-btn>
-			<v-btn icon @click.stop="clipped = !clipped">
-				<v-icon>web</v-icon>
-			</v-btn>
-			<v-btn icon @click.stop="fixed = !fixed">
-				<v-icon>remove</v-icon>
-			</v-btn>
+			<!-- <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon> -->
 			<v-toolbar-title v-text="title"></v-toolbar-title>
 			<v-spacer></v-spacer>
-			<v-btn icon @click.stop="rightDrawer = !rightDrawer">
-				<v-icon>menu</v-icon>
+			<v-btn icon >
+				<v-icon medium>cloud_download</v-icon>
+			</v-btn>
+			<v-btn icon >
+				<v-icon medium>cloud_upload</v-icon>
 			</v-btn>
 		</v-toolbar>
 		<v-content>
-			<HelloWorld/>
+			<v-layout row>
+				<v-flex xs3 md3>
+					<sidebar :currentitem='fselectedmenu' />
+				</v-flex>
+				<v-flex xs9 md9 class='pa-2'>
+					<functionality-menu v-on:setCurrentMenu='itemSelected($event)' />
+					<pano-viewer />
+				</v-flex>
+			</v-layout>
+			<v-layout row>
+				<v-flex>
+					Tours Component Will Come Here
+				</v-flex>
+			</v-layout>
 		</v-content>
-		<v-navigation-drawer
-			temporary
-			:right="right"
-			v-model="rightDrawer"
-			fixed
-			app
-		>
-			<v-list>
-				<v-list-tile @click="right = !right">
-					<v-list-tile-action>
-						<v-icon>compare_arrows</v-icon>
-					</v-list-tile-action>
-					<v-list-tile-title>Switch drawer (click me)</v-list-tile-title>
-				</v-list-tile>
-			</v-list>
-		</v-navigation-drawer>
-		<v-footer :fixed="fixed" app>
+		<!-- <v-footer :fixed="fixed" app>
 			<span>&copy; 2017</span>
-		</v-footer>
+		</v-footer> -->
 	</v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+import FunctionalityMenu from './components/FunctionalityMenu'
+import PanoViewer from './components/PanoViewer'
+import Sidebar from './components/Sidebar'
 
 export default {
 	name: 'App',
 	components: {
-		HelloWorld
+		FunctionalityMenu,
+		Sidebar,
+		PanoViewer
 	},
 	data () {
 		return {
+			fselectedmenu: null,
 			clipped: false,
 			drawer: true,
 			fixed: false,
@@ -89,7 +65,12 @@ export default {
 			miniVariant: false,
 			right: true,
 			rightDrawer: false,
-			title: 'Vuetify.js'
+			title: 'Pano Editor'
+		}
+	},
+	methods: {
+		itemSelected (option) {
+			this.fselectedmenu = option
 		}
 	}
 }

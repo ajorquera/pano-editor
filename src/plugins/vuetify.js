@@ -9,6 +9,7 @@ import {
 	VIcon,
 	VGrid,
 	VToolbar,
+	VTooltip,
 	transitions
 } from 'vuetify'
 import 'vuetify/src/stylus/app.styl'
@@ -16,6 +17,7 @@ import 'vuetify/src/stylus/app.styl'
 Vue.use(Vuetify, {
 	components: {
 		VApp,
+		VTooltip,
 		VNavigationDrawer,
 		VFooter,
 		VList,
