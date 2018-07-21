@@ -19,6 +19,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #panorama {
-	height: 60vh;
+	height: Calc(60vh - 48px);
 }
 </style>

@@ -39,7 +39,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .sidebar-container{
-	min-height: 70vh;
+	min-height: Calc(70vh - 48px);
 	background-color: white;
 }
 .slide-fade-enter-active {

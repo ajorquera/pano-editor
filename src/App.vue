@@ -1,6 +1,7 @@
 <template>
 	<v-app>
 		<v-toolbar
+			dense
 			app
 			color='primary'
 			dark
@@ -19,7 +20,7 @@
 			</v-btn>
 		</v-toolbar>
 		<v-content>
-			<v-layout row>
+			<v-layout row class='upper_portion'>
 				<v-flex xs3 md3>
 					<sidebar :currentitem='fselectedmenu' />
 				</v-flex>
@@ -28,9 +29,9 @@
 					<pano-viewer />
 				</v-flex>
 			</v-layout>
-			<v-layout row>
+			<v-layout row class='lower_portion'>
 				<v-flex>
-					Tours Component Will Come Here
+					<tours-component />
 				</v-flex>
 			</v-layout>
 		</v-content>
@@ -44,13 +45,15 @@
 import FunctionalityMenu from './components/FunctionalityMenu'
 import PanoViewer from './components/PanoViewer'
 import Sidebar from './components/Sidebar'
+import ToursComponent from './components/ToursComponent'
 
 export default {
 	name: 'App',
 	components: {
 		FunctionalityMenu,
 		Sidebar,
-		PanoViewer
+		PanoViewer,
+		ToursComponent
 	},
 	data () {
 		return {
@@ -75,3 +78,16 @@ export default {
 	}
 }
 </script>
+
+<style>
+	.upper_portion{
+		height: Calc(70vh - 48px);
+	}
+	.lower_portion{
+		height: 30vh;
+		position: relative;
+	}
+	.justify-content-center{
+		justify-content: center;
+	}
+</style>
