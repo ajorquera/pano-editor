@@ -1,9 +1,11 @@
 <template>
 	<v-layout row wrap class='tours' v-bind:class='{extend : extend}'>
-		<v-btn v-if='items && items.length > 0' class='extend_button' icon small dark color='primary' @click='extend =! extend' >
+		<!-- <v-btn v-if='items && items.length > 0' class='extend_button' icon small dark color='primary' @click='extend =! extend' >
 			<v-icon v-if='extend'>keyboard_arrow_down</v-icon>
 			<v-icon v-else>keyboard_arrow_up</v-icon>
-		</v-btn>
+		</v-btn> -->
+		<i v-if='!extend' class="fas fa-arrow-alt-circle-up extend_button"  @click='extend =! extend'></i>
+		<i v-if='extend' class="fas fa-arrow-alt-circle-down extend_button"  @click='extend =! extend'></i>
 		<v-flex xs12 v-if='extend' class='pt-5 tours__extended_container'>
 			<v-layout class='tours__extended_view' row wrap>
 				<single-tour-component
@@ -22,13 +24,11 @@
 			</v-dialog>
 		</v-flex>
 		<v-flex xs12 v-else class='pt-2 tours__non_extend_container'>
-			<v-layout v-if='items && items.length' row class='tours__non_extend_view'>
+			<v-layout row class='tours__non_extend_view'>
 				<v-flex xs1 class='d-flex align_items_center'>
-					<v-btn  @click='moveLeft'  class='left_button' icon small dark color='primary' >
-						<v-icon>keyboard_arrow_left</v-icon>
-					</v-btn>
+					<i @click='moveLeft' class="left_button btn far fa-arrow-alt-circle-left"></i>
 				</v-flex>
-				<v-flex xs10 class='d-flex tours__non_extend_view__display'>
+				<v-flex  v-if='items && items.length'  xs10 class='d-flex tours__non_extend_view__display'>
 					<div ref='slider' class='d-flex tours__non_extend_view__display__slider'>
 						<single-tour-component
 							v-for='(item,index) in items'
@@ -38,15 +38,14 @@
 						/>
 					</div>
 				</v-flex>
+				<v-flex v-else class='mt-3'>
+					<file-drop :extend='false'  @uploadedFiles='addFilesToTours'></file-drop>
+				</v-flex>
 				<v-flex xs1 class='d-flex align_items_center'>
-					<v-btn @click='moveRight' class='right_button' icon small dark color='primary' >
-						<v-icon>keyboard_arrow_right</v-icon>
-					</v-btn>
+					<i @click='moveRight' class="right_button btn far fa-arrow-alt-circle-right"></i>
 				</v-flex>
 			</v-layout>
-			<v-layout v-if='!items || items.length == 0'>
-				<file-drop :extend='false'  @uploadedFiles='addFilesToTours'></file-drop>
-			</v-layout>
+
 		</v-flex>
 	</v-layout>
 </template>
@@ -138,21 +137,28 @@ export default {
 		position: absolute;
 		z-index: 3;
 		left: 50%;
+		font-size: 2rem;
+		line-height: 5px;
+		cursor: pointer;
 	}
 	.left_button{
 		position: absolute;
 		z-index: 3;
 		left: 3%;
+		font-size: 2rem;
+		cursor: pointer;
 	}
 	.right_button{
 		position: absolute;
 		z-index: 3;
 		right: 3%;
+		font-size: 2rem;
+		cursor: pointer;
 	}
 	.tours__non_extend_container{
 		height: 28vh;
+		box-shadow: 0 -5px 4px -5px rgba(0,0,0,0.2);
 	}
-
 	.tours__extended_container {
 		min-height: fit-content;
 		position: relative;
