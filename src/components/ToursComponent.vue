@@ -15,7 +15,13 @@
 					class='ma-2'
 				/>
 			</v-layout>
-			<v-btn fab @click='dialog = true' v-if='extend' class='primary tours__extended_container__addtour' icon><v-icon>add</v-icon></v-btn>
+			
+			<!-- <v-btn for="file-upload" fab v-if='extend' class='custom-file-upload primary tours__extended_container__addtour' icon><v-icon>add</v-icon></v-btn>
+			<input id="file-upload" type="file"/> -->
+			<label fab class="custom-file-upload primary tours__extended_container__addtour">
+				<input multiple ref="myFiles" @change='extendedFilesSelect' type="file"/>
+				<v-icon class='text-white'>add</v-icon>
+			</label>
 			<v-dialog content-class='addtour' v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
 				<v-btn absolute fab icon dark @click.native="dialog = false">
 					<v-icon>close</v-icon>
@@ -29,7 +35,7 @@
 					<i @click='moveLeft' class="left_button btn far fa-arrow-alt-circle-left"></i>
 				</v-flex>
 				<v-flex  v-if='items && items.length'  xs10 class='d-flex tours__non_extend_view__display'>
-					<div ref='slider' class='d-flex tours__non_extend_view__display__slider'>
+					<div ref='slider' class='tours__non_extend_view__display__slider'>
 						<single-tour-component
 							v-for='(item,index) in items'
 							:key='index'
@@ -80,36 +86,44 @@ export default {
 			this.dialog = false
 			this.items = this.items.concat(e)
 		},
+		extendedFilesSelect () {
+			let files = []
+			let filesLength = this.$refs.myFiles.files.length
+			for (var i = 0; i < filesLength; i++) {
+				files.push(this.$refs.myFiles.files[i]);
+			}
+			this.addFilesToTours(files)
+		},
 		moveLeft () {
+			let total = this.items.length
 			if(this.items.length < 8){
 				return
 			}
-
+			if(this.moves + total <= 8){
+				return
+			}
+			// if(this.moves < 0){
+			// 	console.log('check 3', this.moves, this.items.length)
+			// 	return
+			// }
 			this.moves --
-			let total = this.items.length
 			let distance = this.moves * 10
 			this.$refs.slider.style.transform = 'translateX('+ distance +'vw)'
-			if(this.moves + total <= 8){
-				this.hide_left = false
-			}
-			if(this.moves < 0){
-				this.hide_right = true
-			}
 		},
 		moveRight () {
 			if(this.items.length < 8){
+				return
+			}
+			if(this.moves >= 0){
+				return
+			}
+			if(this.moves + total >= 8){
 				return
 			}
 			this.moves ++
 			let total = this.items.length
 			let distance = this.moves * 10
 			this.$refs.slider.style.transform = 'translateX('+ distance +'vw)'
-			if(this.moves >= 0){
-				this.hide_right = false
-			}
-			if(this.moves + total >= 8){
-				this.hide_left = true
-			}
 		}
 	}
 }
@@ -117,6 +131,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+	.custom-file-upload {
+		display: inline-block;
+		padding: 10px;
+		cursor: pointer;
+		border-radius: 10vh;
+	}
+	input[type="file"] {
+		display: none;
+	}
+	.custom-file-upload i {
+		color: white;
+	}
 	.addtour {
 	}
 	.tours{
@@ -167,6 +193,7 @@ export default {
 		overflow: hidden;
 	}
 	.tours__non_extend_view__display__slider {
+		display: flex;
 		transition-property: all;
 		transition-duration: 1s;
 		transition-timing-function: cubic-bezier(0, 1, 0.5, 1);

@@ -1,18 +1,19 @@
 <template>
-	<v-card class='single-tour-container'>
-		<v-card-media
+	<v-card flat class='single-tour-container'>
+		<!-- <v-card-media
+			class='rounded_image'
 			src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
 			height="10vh"
-		></v-card-media>
-
-		<v-card-title primary-title>
-			<div>
-				<v-text-field class="subheading mb-0"
-					v-model='name'
-					label= 'Tour Name'
-				></v-text-field>
-			</div>
-		</v-card-title>
+		></v-card-media> -->
+		<div class='rounded_image' v-bind:style="{ 'background-image': 'url(https://cdn.vuetifyjs.com/images/cards/desert.jpg)' }">
+			<i class="far fa-times-circle remove_icon"></i>
+		</div>
+		<div>
+			<v-text-field class="subheading mb-0"
+				flat
+				v-model='name'
+			></v-text-field>
+		</div>
 	</v-card>
 </template>
 
@@ -48,6 +49,17 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 	.single-tour-container{
-		max-width: 10vw;
+		width: 10vw;
+	}
+	.rounded_image{
+		border-radius: 23vh !important;
+		height: 19vh;
+		background-position: center;
+		text-align: right;
+		background-color: #fafafa;
+		font-size: 2rem;
+	}
+	.remove_icon{
+		cursor: pointer;
 	}
 </style>

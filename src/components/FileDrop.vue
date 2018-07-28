@@ -85,16 +85,16 @@
 				<v-flex v-if='!files || files.length == 0' xs12 class="d-flex text-sm-center">
 					<h4 class='headline mb-2 text-grey'><i class="far fa-image mr-2"></i> Drop some panos</h4>
 				</v-flex>
-				<v-flex xs12 v-if='files && files.length' class='d-flex pa-4 justify-content-center flex-wrap'>
+				<!-- <v-flex xs12 v-if='files && files.length' class='d-flex pa-4 justify-content-center flex-wrap'>
 					<div v-for="(file, key) in files" class="fdd__file_preview ma-2" :key='key'>
 						<v-icon large class='image_icon'>image</v-icon>
 						{{ file.name }}
 						<v-btn icon @click='removeFile(key)'><v-icon>remove_circle_outline</v-icon></v-btn>
 					</div>
-				</v-flex>
-				<v-flex v-if='files && files.length > 0' xs12 class='fdd__submit-button'>
+				</v-flex> -->
+				<!-- <v-flex v-if='files && files.length > 0' xs12 class='fdd__submit-button'>
 					<v-btn @click='submitFiles' class='primary' >Add Files</v-btn>
-				</v-flex>
+				</v-flex> -->
 			</div>
 		</v-layout>
 	</div>
@@ -126,6 +126,9 @@ export default {
 				for( let i = 0; i < e.dataTransfer.files.length; i++ ){
 					this.files.push( e.dataTransfer.files[i] );
 				}
+				setTimeout(() => {
+					this.submitFiles()
+				}, 500);
 			}.bind(this));
 		}
 	},
