@@ -29,15 +29,8 @@
 					<pano-viewer />
 				</v-flex>
 			</v-layout>
-			<v-layout row class='lower_portion'>
-				<v-flex>
-					<tours-component />
-				</v-flex>
-			</v-layout>
+			<image-manager />
 		</v-content>
-		<!-- <v-footer :fixed="fixed" app>
-			<span>&copy; 2017</span>
-		</v-footer> -->
 	</v-app>
 </template>
 
@@ -45,7 +38,7 @@
 import FunctionalityMenu from './components/FunctionalityMenu'
 import PanoViewer from './components/PanoViewer'
 import Sidebar from './components/Sidebar'
-import ToursComponent from './components/ToursComponent'
+import ImageManager from './components/ImageManager'
 
 export default {
 	name: 'App',
@@ -53,7 +46,7 @@ export default {
 		FunctionalityMenu,
 		Sidebar,
 		PanoViewer,
-		ToursComponent
+		ImageManager
 	},
 	data () {
 		return {
