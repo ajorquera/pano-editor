@@ -5,20 +5,22 @@
 
 
 		v-flex(xs1 class="self-center")
-			v-btn(fab :disabled="isEmpty" v-show="!isExtended" @click="move('left')")
+			v-btn(fab :disabled="isRotable" v-show="!isExtended" @click="move('left')")
 				v-icon(class="fas fa-caret-left")
 
 		v-flex(xs10)
 			file-drop(@input="addNewFiles")
 				v-layout(wrap row v-if="!isEmpty")
-					v-flex(xs3 class="ma-5" v-for='file in files' :key='file.id')
+					v-flex(xs3 class="pa-4" v-for='img in imgs' :key='img.id')
 						pano-img(
-							:file="file"
 							class="pano-img"
+							:selected="img.selected"
+							:file="img.file"
+							@click="onSelect($event, img)"
 						)
 			
 		v-flex(xs1 class="self-center ")
-			v-btn(fab :disabled="isEmpty" v-show="!isExtended" @click="move('right')")
+			v-btn(fab :disabled="isRotable" v-show="!isExtended" @click="move('right')")
 				v-icon(class="fa fa-caret-right")
 
 		v-btn(absolute dark fab	top right color="pink" @click="$refs.input.click()")
@@ -30,6 +32,8 @@
 <script>
 import PanoImg from '@/components/PanoImg'
 import FileDrop from '@/components/FileDrop'
+import EventBus from '@/EventBus'
+
 
 export default {
 	name: 'ImageComponent',
@@ -40,12 +44,17 @@ export default {
 	data () {
 		return {
 			isExtended: false,
-			files: [],
+			imgs: [],
 		}
 	},
+
 	computed: {
 		isEmpty() {
-			return !this.files.length
+			return !this.imgs.length;
+		},
+
+		isRotable() {
+			return this.imgs.length === 0;
 		}
 	},
 
@@ -63,15 +72,17 @@ export default {
 				files = filesToAdd;
 			}
 
-			//we need an id to for tracking items
-			files.forEach(this.addId);
+			files = files.map(this.createImg.bind(this));
 
-			this.files.push(...files);
+			this.imgs.push(...files);
 		},
 
-		addId(file) {
-			file.id = this.generateId();
-			return file;
+		createImg(file) {
+			return {
+				id: this.generateId(),
+				file,
+				selected: false
+			}
 		},
 
 		generateId() {
@@ -81,8 +92,34 @@ export default {
 			});
 		},
 
+		onSelect(e, imgToFind) {
+			const imgIndex = this.imgs.findIndex(img => imgToFind.id === img.id);
+			if (!imgIndex === -1) return;
+
+			const img = this.imgs[imgIndex];
+			const isCTRLDown = e.metaKey;
+			const isSelected = img.selected;
+			const isMutipleSelection = isCTRLDown || isCTRLDown
+
+			if (!isMutipleSelection) {
+				this.deselectAll();
+			} 
+			
+			img.selected = !isSelected;
+		
+			this.imgs = this.imgs.slice();
+
+			if (!isMutipleSelection) {
+				EventBus.$emit('select', img);
+			}
+		},
+
+		deselectAll() {
+			this.imgs.forEach(img => img.selected = false);	
+		},
+
 		move(direction) {
-			const arr = this.files.slice();
+			const arr = this.imgs.slice();
 
 			if(direction === 'right') {
 				arr.unshift(arr.pop())
@@ -91,7 +128,7 @@ export default {
 				arr.push(arr.shift())
 			}
 
-			this.files = arr;
+			this.imgs = arr;
 		},
 		
 	}
