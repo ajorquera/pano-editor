@@ -1,22 +1,56 @@
 <template>
-	<v-flex id='panorama'>
-	</v-flex>
+	<div ref='viewer'>
+	</div>
 </template>
 
 <script>
-// import * as pannellum from 'pannellum'
+import "pannellum/build/pannellum";
+import EventBus, {events} from '@/EventBus';
+
+const pannellum = window.pannellum;
+
 export default {
 	name: 'PanoViewer',
+
+	data() {
+		return {
+			viewer: null,
+			objectUrl: null,
+			img: null
+		}
+	},
+	
 	mounted () {
-		pannellum.viewer('panorama', {
-			"type": "equirectangular",
-			"panorama": "https://pannellum.org/images/alma.jpg"
-		});
+		EventBus.$on(events.SELECT_IMG, this.onSelect);
+	},
+
+	methods: {
+		onSelect(img) {
+			this.img = img;
+			this.loadImg();
+		},
+
+		loadImg() {
+			if(this.viewer) {
+				this.destroy();
+			}
+
+			this.objectUrl = URL.createObjectURL(this.img.file);
+			this.viewer = pannellum.viewer(this.$refs.viewer, {
+				type: "equirectangular",
+				autoLoad: true,
+				panorama: this.objectUrl
+			});
+		},
+
+		destroy() {
+			URL.revokeObjectURL(this.objectUrl);
+			this.viewer.destroy();
+		}
 	}
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #panorama {
 	height: Calc(60vh - 48px);

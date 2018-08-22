@@ -1,8 +1,9 @@
 import '@babel/polyfill'
-import Vue from 'vue'
 import './plugins/vuetify'
-import './plugins/pannellum'
-import App from './App.vue'
+import './plugins/logger'
+
+import Vue from 'vue';
+import App from './App.vue';
 
 Vue.config.productionTip = false
 

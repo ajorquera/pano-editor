@@ -9,9 +9,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "exifreader": "^2.5.0",
     "pannellum": "^2.4.1",
     "vue": "^2.5.16",
-    "vuetify": "^1.0.19"
+    "vuetify": "^1.0.19",
+    "universal-logger": "^1.0.1",
+    "universal-logger-browser": "^1.0.2"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.0.0-beta.49",

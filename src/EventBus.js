@@ -1,3 +1,21 @@
 import Vue from 'vue'
 
-export default new Vue();
+export const events = {
+	SELECT_IMG: 'SELECT',
+	SELECT_PANEL: 'SELECT_PANEL'
+}
+
+
+const EventBus = new Vue();
+
+const log = (ID) => {
+	EventBus.$logger.trace('EVENT', ID);
+}
+
+Object.values(events).forEach(eventId => {
+	EventBus.$on(eventId, log.bind(null, eventId));
+});
+
+export default EventBus;
+
+

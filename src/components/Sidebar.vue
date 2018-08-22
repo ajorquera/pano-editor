@@ -1,38 +1,79 @@
-<template>
-	<v-flex class='sidebar-container pa-4' color='white'>
-		<transition name="slide-fade" mode="out-in">
-			<v-flex v-if='currentitem' :key='currentitem.name'>
-				<v-flex  class='d-flex justify-content-between'>
-					<h4 class='headline'>{{currentitem.name}}</h4>
-					<v-flex class='text-sm-right'>
-						<v-tooltip top>
-							<v-icon
-								color="primary"
-								dark
-								slot="activator"
-							>info
-							</v-icon>
-							<span>{{currentitem.name}}</span>
-						</v-tooltip>
-					</v-flex>
-				</v-flex>
-			</v-flex>
-		</transition>
-		<v-flex v-if='!currentitem'>
-			Show Advertisements
-		</v-flex>
-	</v-flex>
+<template lang="pug">
+	transition(name="slide-fade" mode="out-in")
+		v-layout(class='sidebar-container pa-4' color='white')
+			v-flex
+				div(:is="currentPanel" v-bind="props" :key="id")
+
+
 </template>
 
 <script>
+import EventBus, {events} from '@/EventBus';
+import Ads from '@/components/Ads';
+import Information from '@/components/Information';
 
 export default {
-	props: ['currentitem'],
 	name: 'Sidebar',
+
+	components: {
+		Ads,
+		Information
+	},
 	data () {
 		return {
+			currentPanel: null,
+			props: null,
+			img: null,
+			panels: {
+				INFORMATION: 'information',
+				ADS: 'ads',
+				NADIR: 'NADIR'
+			},
+			counter: 0
+		}
+	},
+
+	computed: {
+		id() {
+			return this.img && this.img.id;
+		}
+	},
+
+	mounted() {
+		EventBus.$on(events.SELECT_IMG, this.onSelectImg);
+		EventBus.$on(events.SELECT_PANEL, this.onSelectPanel);
+		this.setPanel('ADS');
+	},
+
+	methods: {
+		onSelectImg(img) {
+			this.img = img;
+			
+			if(this.isPanel('ADS')) {
+				this.setPanel('INFORMATION');
+			}
+		},
+
+		onSelectPanel(panelID) {
+			this.setPanel(panelID);
+		},
+
+		setPanel(id) {
+			const props = {};
+
+			if(id === 'INFORMATION') {
+				props.file = this.img.file;
+			}
+
+			this.props = props;
+			this.currentPanel = this.panels[id];
+		},
+
+		isPanel(id) {
+			return this.currentPanel === this.panels[id];
 		}
 	}
+
 }
 </script>
 

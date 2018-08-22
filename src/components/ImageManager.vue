@@ -32,7 +32,7 @@
 <script>
 import PanoImg from '@/components/PanoImg'
 import FileDrop from '@/components/FileDrop'
-import EventBus from '@/EventBus'
+import EventBus, {events} from '@/EventBus'
 
 
 export default {
@@ -41,6 +41,7 @@ export default {
 		PanoImg,
 		FileDrop
 	},
+	
 	data () {
 		return {
 			isExtended: false,
@@ -110,7 +111,7 @@ export default {
 			this.imgs = this.imgs.slice();
 
 			if (!isMutipleSelection) {
-				EventBus.$emit('select', img);
+				EventBus.$emit(events.SELECT_IMG, img);
 			}
 		},
 
