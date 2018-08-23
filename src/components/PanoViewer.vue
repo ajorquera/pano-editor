@@ -26,8 +26,10 @@ export default {
 
 	methods: {
 		onSelect(img) {
-			this.img = img;
-			this.loadImg();
+			if(img !== this.img) {
+				this.img = img;
+				this.loadImg();
+			}
 		},
 
 		loadImg() {

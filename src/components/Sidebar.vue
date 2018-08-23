@@ -2,7 +2,7 @@
 	transition(name="slide-fade" mode="out-in")
 		v-layout(class='sidebar-container pa-4' color='white')
 			v-flex
-				div(:is="currentPanel" v-bind="props" :key="id")
+				div(:is="currentPanel" :file="this.img" :key="id")
 
 
 </template>
@@ -11,13 +11,15 @@
 import EventBus, {events} from '@/EventBus';
 import Ads from '@/components/Ads';
 import Information from '@/components/Information';
+import Nadir from '@/components/Nadir';
 
 export default {
 	name: 'Sidebar',
 
 	components: {
 		Ads,
-		Information
+		Information,
+		Nadir
 	},
 	data () {
 		return {
@@ -27,7 +29,7 @@ export default {
 			panels: {
 				INFORMATION: 'information',
 				ADS: 'ads',
-				NADIR: 'NADIR'
+				NADIR: 'nadir'
 			},
 			counter: 0
 		}
@@ -59,13 +61,6 @@ export default {
 		},
 
 		setPanel(id) {
-			const props = {};
-
-			if(id === 'INFORMATION') {
-				props.file = this.img.file;
-			}
-
-			this.props = props;
 			this.currentPanel = this.panels[id];
 		},
 

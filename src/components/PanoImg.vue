@@ -1,72 +1,39 @@
 <template lang="pug">
-	v-layout(column class="pano-img" :class="{'is-selected': selected}")
-		v-icon(v-show="selected" class="checkmark" color="primary") fa fa-check-circle
+	v-layout(column class="pano-img" :class="{'is-selected': file.selected}")
+		v-icon(v-show="file.selected" class="checkmark" color="primary") fa fa-check-circle
 		v-flex(class="img-container" @click="click")
 			v-avatar(class="avatar" :size="size")
-				img(:src="preview")
+				img(:src="file.preview")
 
 		v-flex(class="text-input")
-			v-text-field(:value="name")
+			v-text-field(:value="file.name")
 
 </template>
 
 <script>
+import PanoFile from "@/PanoFile";
 
 export default {
-	props: {
-		file: {
-			type: File,
-			required: true
-		},
-
-		selected: {
-			type: Boolean,
-			default: false
-		}
-	},
 	name: 'PanoImg',
 
-	data() {
-		return {
-			preview: null,
-			reader: null,
-		};
+	props: {
+		file: {
+			type: PanoFile,
+			required: true
+		}
 	},
 
 	computed: {
-		name() {
-			const filename = this.file.name;
-			return filename.substring(0, filename.lastIndexOf("."))
-		},
-
 		size() {
-			return this.selected ? 96 : 128;
+			return this.file.selected ? 96 : 128;
 		}
-
 	},
 
 	methods: {
-		onLoad() {
-			this.preview = this.reader.result;
-		},
-
 		click(e) {
 			this.$emit('click', e);
 		}
 	},
-
-	mounted() {
-		this.reader = new FileReader();
-		this.reader.onload = this.onLoad.bind(this);
-		this.reader.readAsDataURL(this.file);
-	},
-
-	destroyed() {
-		this.reader = null;
-		this.preview = null;
-	}
-
-	
 }
 </script>
 

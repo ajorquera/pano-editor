@@ -25,7 +25,7 @@
 					<sidebar :currentitem='fselectedmenu' />
 				</v-flex>
 				<v-flex xs9 md9 class='pa-2'>
-					<functionality-menu v-on:setCurrentMenu='itemSelected($event)' />
+					<functionality-menu />
 					<pano-viewer />
 				</v-flex>
 			</v-layout>

@@ -1,40 +1,49 @@
-<template>
-	<v-layout xs12 md12 class='row d-flex text-sm-right fmenu'>
-		<v-flex>
-			<v-spacer></v-spacer>
-			<v-tooltip top  v-for='btn in icon_list' :key='btn.icon'>
-				<v-btn v-on:click='setCurrentMenu(btn)' icon slot="activator">
-					<v-icon
-						medium
-						color="primary"
-						dark
-					>{{btn.icon}}</v-icon>
-				</v-btn>
-				<span>{{btn.name}}</span>
-			</v-tooltip>
-		</v-flex>
-	</v-layout>
+<template lang="pug">
+	div(class="text-xs-right")
+		v-tooltip(top v-for='btn in funcList' :key='btn.icon')
+			v-btn(@click='setCurrentPanel(btn)' icon slot="activator" :disabled="isDisabled")
+				v-icon(medium color="primary" dark) {{btn.icon}}
+			span {{btn.name}}
+
 </template>
 
 <script>
+import EventBus, {events} from '@/EventBus';
+
 export default {
 	name: 'HelloWorld',
 	data() {
-		return{
-			icon_list: [
-				{icon: 'perm_device_information', name: 'Information'},
-				{icon: 'control_point', name: 'Control Point'},
-				{icon: 'zoom_in', name: 'Zoom In' },
-				{icon: 'camera', name: 'Camera'},
-				{icon: 'place', name: 'Place'},
-				{icon: 'settings', name: 'Settings'},
-				{icon: 'adjust', name: 'adjust'},
-			]
+		return {
+			funcList: [
+				{icon: 'perm_device_information', name: 'Information', eventId: 'INFORMATION'},
+				{icon: 'adjust',                  name: 'Nadir',       eventId: 'NADIR'},
+				{icon: 'control_point',           name: 'Control Point'},
+				{icon: 'zoom_in',                 name: 'Zoom In' },
+				{icon: 'camera',                  name: 'Camera'},
+				{icon: 'place',                   name: 'Place'},
+				{icon: 'settings',                name: 'Settings'},
+			],
+			panoFile: null
 		}
 	},
+
+	computed: {
+		isDisabled() {
+			return !this.panoFile;
+		}
+	},
+
+	mounted() {
+		EventBus.$on(events.SELECT_IMG, this.onSelectImg);
+	},
+
 	methods: {
-		setCurrentMenu(option){
-			this.$emit('setCurrentMenu', option)
+		setCurrentPanel(option) {
+			EventBus.$emit(events.SELECT_PANEL, option.eventId);
+		},
+
+		onSelectImg(panoFile) {
+			this.panoFile = panoFile;
 		}
 	}
 }

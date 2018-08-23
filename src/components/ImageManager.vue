@@ -13,9 +13,8 @@
 				v-layout(wrap row v-if="!isEmpty")
 					v-flex(xs3 class="pa-4" v-for='img in imgs' :key='img.id')
 						pano-img(
+							:file="img"
 							class="pano-img"
-							:selected="img.selected"
-							:file="img.file"
 							@click="onSelect($event, img)"
 						)
 			
@@ -33,6 +32,7 @@
 import PanoImg from '@/components/PanoImg'
 import FileDrop from '@/components/FileDrop'
 import EventBus, {events} from '@/EventBus'
+import PanoFile from '@/PanoFile';
 
 
 export default {
@@ -72,25 +72,23 @@ export default {
 			}  if(Array.isArray(filesToAdd)) {
 				files = filesToAdd;
 			}
-
-			files = files.map(this.createImg.bind(this));
+			
+			files = files.map(this.createPanoImg).filter(file => !!file);
 
 			this.imgs.push(...files);
 		},
 
-		createImg(file) {
-			return {
-				id: this.generateId(),
-				file,
-				selected: false
-			}
-		},
+		createPanoImg(file) {
+			let panoImg;
 
-		generateId() {
-			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-				var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-				return v.toString(16);
-			});
+			try {
+				panoImg = new PanoFile(file);
+			} catch(e) {
+				panoImg = null;
+				this.$logger.error(e.message);
+			}
+
+			return panoImg;
 		},
 
 		onSelect(e, imgToFind) {
@@ -99,10 +97,10 @@ export default {
 
 			const img = this.imgs[imgIndex];
 			const isCTRLDown = e.metaKey;
-			const isSelected = img.selected;
-			const isMutipleSelection = isCTRLDown || isCTRLDown
+			const isSelected = img.isSelected;
+			const isMutipleSelection = isCTRLDown || isSelected;
 
-			if (!isMutipleSelection) {
+			if (!isCTRLDown) {
 				this.deselectAll();
 			} 
 			

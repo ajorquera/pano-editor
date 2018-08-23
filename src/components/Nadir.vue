@@ -1,9 +1,6 @@
 <template lang="pug">
 	div
-		h2 Information
-		v-layout(row wrap)
-			v-flex(v-for="(value, name) in file.properties" :key="name")
-				v-text-field(:label="name", :value="value" v-show="value")
+		h2 Nadir
 
 </template>
 
@@ -11,7 +8,7 @@
 import PanoFile from '@/PanoFile';
 
 export default {
-	name: 'Information',
+	name: 'Nadir',
 	props: {
 		file: {
 			type: PanoFile,
