@@ -2,6 +2,7 @@ import Vue from 'vue'
 import {
 	Vuetify,
 	VAvatar,
+	VSwitch,
 	VApp,
 	VNavigationDrawer,
 	VFooter,
@@ -22,6 +23,7 @@ import 'vuetify/src/stylus/app.styl'
 Vue.use(Vuetify, {
 	components: {
 		VApp,
+		VSwitch,
 		VAvatar,
 		VTooltip,
 		VNavigationDrawer,

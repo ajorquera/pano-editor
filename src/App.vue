@@ -26,7 +26,7 @@
 				</v-flex>
 				<v-flex xs9 md9 class='pa-2'>
 					<functionality-menu />
-					<pano-viewer />
+					<viewer />
 				</v-flex>
 			</v-layout>
 			<image-manager />
@@ -36,7 +36,7 @@
 
 <script>
 import FunctionalityMenu from './components/FunctionalityMenu'
-import PanoViewer from './components/PanoViewer'
+import Viewer from './components/Viewer'
 import Sidebar from './components/Sidebar'
 import ImageManager from './components/ImageManager'
 
@@ -45,7 +45,7 @@ export default {
 	components: {
 		FunctionalityMenu,
 		Sidebar,
-		PanoViewer,
+		Viewer,
 		ImageManager
 	},
 	data () {

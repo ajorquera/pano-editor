@@ -1,8 +1,9 @@
 import Vue from 'vue'
 
 export const events = {
-	SELECT_IMG: 'SELECT',
-	SELECT_PANEL: 'SELECT_PANEL'
+	SELECT_IMG              : 'SELECT',
+	SELECT_PANEL            : 'SELECT_PANEL',
+	SET_GNOMONIC_PROJECTION : 'SET_GNOMONIC_PROJECTION'
 }
 
 
