@@ -1,7 +1,7 @@
 <template lang="pug">
 	div(class="viewer")
-		div(ref='domViewerContainer')
-		canvas(class="canvas" ref="domCanvas" v-show="isGnomonicImageViewer")
+		div(ref='domViewerContainer' :style="domViewerStyle" v-show="isPanoViewer")
+		canvas(class="canvas" ref="domCanvas" v-show="isGnomonicImageViewer" :width="width" :height="height")
 
 </template>
 
@@ -10,7 +10,6 @@ import "pannellum/build/pannellum";
 
 import EventBus, {events} from '@/EventBus';
 import utils from '@/utils'
-import {fabric} from 'fabric';
 
 const pannellum = window.pannellum;
 
@@ -23,7 +22,9 @@ export default {
 			objectUrl: null,
 			img: null,
 			fabricCanvas: null,
-			currentViewer: null
+			currentViewer: null,
+			width: 1024,
+			height: 500
 		}
 	},
 
@@ -38,6 +39,17 @@ export default {
 
 		isGnomonicImageViewer() {
 			return this.currentViewer === 'gnomonicViewer';
+		},
+
+		isPanoViewer() {
+			return this.currentViewer === 'panoViewer';
+		},
+
+		domViewerStyle() {
+			return {
+				width: this.width + 'px',
+				height: this.height + 'px'
+			}
 		}
 	},
 	
@@ -76,56 +88,25 @@ export default {
 		},
 
 		loadGnomonicImageViewer() {
-			this.destroy();
+			this.destroyPanoViewer();
 
-			const width = 800;
-			const height = 800;
+			const ctx = this.domCanvas.getContext('2d');
+			const img = new Image();
 
-			if(!this.fabricCanvas) {
-				this.fabricCanvas = new fabric.Canvas(this.domCanvas, {
-					width,
-					height
+			img.onload = () => {	
+				utils.changeImgProjection({
+					image       : img, 
+					context     : ctx, 
+					projection  : 'gnomonic', 
+					width       : this.width, 
+					height      : this.height
 				});
-			} 
-			const fabricCanvas = this.fabricCanvas;
-			this.fabricCanvas.clear();
-			this.setObjectUrl();
+			}
 
-			fabric.Image.fromURL(this.objectUrl, (img) => {
-				img.set({
-					width,
-					height
-				});
-				//this.fabricCanvas.setBackgroundImage(img);
-
-				const ctx = this.fabricCanvas.getContext('2d');
-				const imgData = ctx.getImageData(0, 0, width, height);
-
-				const newImgData = utils.changeImgProjection(imgData, 'gnomonic');
-				this.fabricCanvas.clear();
-
-				const canvas = document.createElement('canvas');
-
-				canvas.width = width;
-				canvas.height = height;
-
-				canvas.getContext('2d').putImageData(newImgData, 0, 0);
-
-				fabric.Image.fromURL(canvas.toDataURL(), function(img) {
-					img.left = width;
-					img.top = height;
-					img.bringToFront();
-					fabricCanvas.add(img);
-					fabricCanvas.renderAll();
-				});
-
-
-
-			});
+			img.src = this.img.preview;
 
 			this.currentViewer = 'gnomonicViewer';
 
-			//utils.changeImgProjection();
 		},
 
 		setObjectUrl() {
@@ -152,11 +133,6 @@ export default {
 
 <style lang="scss" scoped>
 .viewer {
-	height: calc(60vh - 48px);
 	
-	.canvas {
-		width: 100%;
-		height:100%;
-	}
 }
 </style>

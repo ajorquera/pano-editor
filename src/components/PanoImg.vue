@@ -25,7 +25,7 @@ export default {
 
 	computed: {
 		size() {
-			return this.file.selected ? 96 : 128;
+			return this.file.selected ? 80 : 100;
 		}
 	},
 
