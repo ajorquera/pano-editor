@@ -4,14 +4,18 @@ const capitalize = (str) => {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export const changeImgProjection = ({context, image, projection, width, height}) => {
+export const changeImgProjection = ({image, projection, width, height}) => {
 
 	const projectionFn = d3Geo[`geo${capitalize(projection)}`]()
 		.rotate([0, 90]);
 
 	var dx = image.width;
 	var	dy = image.height;
-		
+	
+	const canvas = document.createElement('canvas');
+	const context = canvas.getContext('2d');
+	canvas.width = width;
+	canvas.height = height;
 	context.drawImage(image, 0, 0, dx, dy);
 	const imgData = context.getImageData(0, 0, dx, dy);
 	var sourceData = imgData.data,
@@ -30,8 +34,9 @@ export const changeImgProjection = ({context, image, projection, width, height})
 		}
 	}
 
-	context.clearRect(0, 0, width, height);
 	context.putImageData(target, 0, 0);
+	
+	return canvas.toDataURL();
 }
 export default {
 	changeImgProjection

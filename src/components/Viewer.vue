@@ -10,6 +10,7 @@ import "pannellum/build/pannellum";
 
 import EventBus, {events} from '@/EventBus';
 import utils from '@/utils'
+import {fabric} from 'fabric'
 
 const pannellum = window.pannellum;
 
@@ -21,7 +22,6 @@ export default {
 			panoViewer: null,
 			objectUrl: null,
 			img: null,
-			fabricCanvas: null,
 			currentViewer: null,
 			width: 1024,
 			height: 500
@@ -50,6 +50,10 @@ export default {
 				width: this.width + 'px',
 				height: this.height + 'px'
 			}
+		},
+
+		fabricCanvas() {
+			return this.domCanvas && new fabric.Canvas(this.domCanvas);
 		}
 	},
 	
@@ -90,23 +94,31 @@ export default {
 		loadGnomonicImageViewer() {
 			this.destroyPanoViewer();
 
-			const ctx = this.domCanvas.getContext('2d');
-			const img = new Image();
+			const ctx = this.fabricCanvas.getContext();
 
-			img.onload = () => {	
-				utils.changeImgProjection({
-					image       : img, 
-					context     : ctx, 
+			fabric.Image.fromURL(this.img.preview, (img) => {
+				img.filters.push(new fabric.Image.filters.Resize({
+					resizeType: 'sliceHack',
+					scaleX: .1,
+					scaleY: .1
+				}));
+
+				img.applyFilters();
+				const dataUrl = utils.changeImgProjection({
+					image       : img.getElement(), 
 					projection  : 'gnomonic', 
 					width       : this.width, 
-					height      : this.height
+					height      : this.height,
+					context     : ctx
 				});
-			}
+				
+				fabric.Image.fromURL(dataUrl, (newImg) => {
+					this.fabricCanvas.add(newImg).renderAll();
+				});
 
-			img.src = this.img.preview;
+			});	
 
 			this.currentViewer = 'gnomonicViewer';
-
 		},
 
 		setObjectUrl() {
